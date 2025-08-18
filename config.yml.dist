@@ -1,0 +1,34 @@
+regions:
+  - global
+  - us-east1 # US: South Carolina
+  - europe-west1 # EU: Belgium
+  - europe-west9 # EU: Paris
+
+accounts:
+  my-gcp-project:
+    # available resources : https://gcp-nuke.ekristen.dev/resources/
+    resource-types:
+      includes:
+        - CloudFunction
+        - CloudFunction2
+        - CloudRun
+        - GKECluster
+        - ComputeInstance
+        - ComputeFirewall
+        - ComputeForwardingRule
+        - ComputeSSLCertificate
+        - ComputeDisk
+        - StorageBucket
+        - BigQueryDataset
+        - CloudSQLInstance
+
+    filters:
+      __global__:
+        - property: label:gcp-nuke
+          value: "ignore"
+        - property: label:managed_by
+          value: "terraform"
+      ComputeFirewall:
+        - property: "name"
+          value: "default-*"
+          invert: true
