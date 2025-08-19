@@ -1,8 +1,8 @@
 # gcp-nuke
 
-To clean a GCP env
+A simple script to clean a GCP project
 
-## Install / config
+## Local usage
 
 ```bash
 # install
@@ -16,20 +16,52 @@ gcloud services enable run.googleapis.com
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable pubsub.googleapis.com
 gcloud services enable iam.googleapis.com
+gcloud services enable cloudscheduler.googleapis.com # also needed for CI/CD
 
 # check activated APIs
 gcloud services list --enabled
 ```
 
-## Launch a Dry-Run
+### Dry-run
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=creds.json
 gcp-nuke run --config config.yml --no-prompt --project-id <my-project>
 ```
 
-## Launch it
+### Execute
 
 ```bash
-gcp-nuke run --config config.yml --no-prompt  --no-dry-run --project-id <my-project>
+gcp-nuke run --config config.yml --no-prompt --no-dry-run --project-id <my-project>
+```
+
+## CI/CD usage
+
+### 1. Create the repo
+
+```bash
+gcloud artifacts repositories create gcp-nuke-repo \
+  --repository-format=docker \
+  --location=europe-west9 \
+  --description="Docker Repo for gcp-nuke"
+```
+
+### 2. Build & Push the Docker image
+
+```bash
+podman build -t europe-west9-docker.pkg.dev/<my-project>/gcp-nuke-repo/gcp-nuke-job:latest .
+
+gcloud auth configure-docker europe-west9-docker.pkg.dev
+podman push europe-west9-docker.pkg.dev/<my-project>/gcp-nuke-repo/gcp-nuke-job:latest
+```
+
+### 3. Terraform deployment
+
+```bash
+unset GOOGLE_APPLICATION_CREDENTIALS
+gcloud auth application-default login
+
+cd terraform
+terraform init
+terraform apply -var="project_id=<my-project>" -var="region=europe-west9"
 ```
