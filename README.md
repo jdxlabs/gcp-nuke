@@ -25,14 +25,15 @@ gcloud services list --enabled
 ### Dry-run
 
 ```bash
+export CURRENT_GCP_PROJECT_ID=<current-gcp-project-id>
 export GOOGLE_APPLICATION_CREDENTIALS=creds.json
-gcp-nuke run --config config.yml --no-prompt --project-id <my-project>
+gcp-nuke run --config config.yml --no-prompt --project-id $CURRENT_GCP_PROJECT_ID
 ```
 
 ### Execute
 
 ```bash
-gcp-nuke run --config config.yml --no-prompt --no-dry-run --project-id <my-project>
+gcp-nuke run --config config.yml --no-prompt --no-dry-run --project-id $CURRENT_GCP_PROJECT_ID
 ```
 
 ## CI/CD usage
@@ -49,10 +50,10 @@ gcloud artifacts repositories create gcp-nuke-repo \
 ### 2. Build & Push the Docker image
 
 ```bash
-podman build -t europe-west9-docker.pkg.dev/<my-project>/gcp-nuke-repo/gcp-nuke-job:latest .
+podman build -t europe-west9-docker.pkg.dev/$CURRENT_GCP_PROJECT_ID/gcp-nuke-repo/gcp-nuke-job:latest .
 
 gcloud auth configure-docker europe-west9-docker.pkg.dev
-podman push europe-west9-docker.pkg.dev/<my-project>/gcp-nuke-repo/gcp-nuke-job:latest
+podman push europe-west9-docker.pkg.dev/$CURRENT_GCP_PROJECT_ID/gcp-nuke-repo/gcp-nuke-job:latest
 ```
 
 ### 3. Terraform deployment
@@ -63,5 +64,5 @@ gcloud auth application-default login
 
 cd terraform
 terraform init
-terraform apply -var="project_id=<my-project>" -var="region=europe-west9"
+terraform apply -var="project_id=$CURRENT_GCP_PROJECT_ID" -var="region=europe-west9"
 ```

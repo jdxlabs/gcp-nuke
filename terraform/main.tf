@@ -13,13 +13,11 @@ resource "google_cloud_run_v2_job" "gcp_nuke_job" {
 
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/gcp-nuke-repo/gcp-nuke-job:latest"
-        args  = [
-          "run",
-          "--config", "config.yml",
-          "--no-prompt",
-          "--no-dry-run",
-          "--project-id", var.project_id
-        ]
+
+        env {
+          name  = "PROJECT_ID"
+          value = var.project_id
+        }
 
         resources {
           limits = {
@@ -30,7 +28,7 @@ resource "google_cloud_run_v2_job" "gcp_nuke_job" {
       }
 
       max_retries = 3
-      timeout     = "120s"
+      timeout     = "300s"
     }
 
     parallelism = 1
