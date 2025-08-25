@@ -30,7 +30,7 @@ export CURRENT_GCP_PROJECT_ID=<current-gcp-project-id>
 
 export GOOGLE_APPLICATION_CREDENTIALS=creds.json
 # or
-gcloud config auth
+gcloud auth login
 
 gcp-nuke run --config config.yml --no-prompt --project-id $CURRENT_GCP_PROJECT_ID
 ```
@@ -64,7 +64,8 @@ podman push europe-west9-docker.pkg.dev/$CURRENT_GCP_PROJECT_ID/gcp-nuke-repo/gc
 ### 3. Terraform deployment
 
 ```bash
-unset GOOGLE_APPLICATION_CREDENTIALS
+export GOOGLE_APPLICATION_CREDENTIALS=creds.json
+# or
 gcloud auth application-default login
 
 cd terraform
