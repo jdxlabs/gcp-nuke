@@ -16,7 +16,8 @@ gcloud services enable run.googleapis.com
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable pubsub.googleapis.com
 gcloud services enable iam.googleapis.com
-gcloud services enable cloudscheduler.googleapis.com # also needed for CI/CD
+# also needed for CI/CD :
+gcloud services enable cloudscheduler.googleapis.com
 
 # check activated APIs
 gcloud services list --enabled
@@ -26,7 +27,11 @@ gcloud services list --enabled
 
 ```bash
 export CURRENT_GCP_PROJECT_ID=<current-gcp-project-id>
+
 export GOOGLE_APPLICATION_CREDENTIALS=creds.json
+# or
+gcloud config auth
+
 gcp-nuke run --config config.yml --no-prompt --project-id $CURRENT_GCP_PROJECT_ID
 ```
 
